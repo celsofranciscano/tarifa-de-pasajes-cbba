@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+model tbprivileges {
+  PK_privilege Int @id @default(autoincrement())
+  privilege   String  @unique
+  status      Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime?
+  users       tbusers[]
+}
+
+model tbusers {
+  PK_user      Int @id @default(autoincrement())
+  FK_privilege Int
+  firstName    String
+  lastName     String
+  phoneNumber  String?
+  email        String  @unique
+  blockedUntil DateTime?
+  password     String
+  profileImage String?
+  lastLogin    DateTime?
+  status       Boolean @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime?
+  privilege    tbprivileges @relation(fields: [FK_privilege], references: [PK_privilege])
+}
+
+model tbfares {
+  PK_fare   Int @id @default(autoincrement())
+  userType  String
+  amount    Float
+  status    Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  passengers tbpassenger[]
+}
+
+model tbpassenger {
+  PK_passenger  Int @id @default(autoincrement())
+  FK_fare       Int
+  firstName     String
+  lastName      String
+  profileImage  String?
+  CI            String  @unique
+  phone         String?
+  birthDate     DateTime
+  gender        String
+  infracciones  Int?
+  status        Boolean @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime?
+  fare          tbfares @relation(fields: [FK_fare], references: [PK_fare])
+  details       tbdetailspassenger?
+  complaints    tbcomplaints[]
+}
+
+model tbdetailspassenger {
+  PK_detail  Int @id @default(autoincrement())
+  FK_passenger Int @unique
+  address    String
+  email      String @unique
+  status     Boolean @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime?
+  passenger  tbpassenger @relation(fields: [FK_passenger], references: [PK_passenger])
+}
+
+model tbstatuscomplaints {
+  PK_status   Int @id @default(autoincrement())
+  statusName  String  @unique
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime?
+  complaints  tbcomplaints[]
+}
+
+model tbcomplaints {
+  PK_complaint     Int @id @default(autoincrement())
+  FK_passenger     Int
+  FK_status        Int
+  transportLine    String
+  vehiclePlate     String
+  incidentRelation String
+  description      String
+  correctAmount    Float
+  chargedAmount    Float
+  image           String?
+  status          Boolean @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime?
+  passenger       tbpassenger @relation(fields: [FK_passenger], references: [PK_passenger])
+  statusComplaint tbstatuscomplaints @relation(fields: [FK_status], references: [PK_status])
+}
