@@ -73,7 +73,7 @@ model tbdetailspassenger {
   email      String @unique
   status     Boolean @default(true)
   createdAt  DateTime @default(now())
-  updatedAt  DateTime?
+0  updatedAt  DateTime?
   passenger  tbpassenger @relation(fields: [FK_passenger], references: [PK_passenger])
 }
 
