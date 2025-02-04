@@ -1,48 +1,78 @@
 import prisma from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
 
+// Método GET: Obtener todos los usuarios
 export async function GET() {
   try {
-    // Consulta optimizada: selecciona únicamente los campos necesarios
     const users = await prisma.tbusers.findMany({
       include: {
-        tbprivileges: {
-          select: {
-            privilege: true,
-          },
-        },
+        privilege: true, // Obtener datos de la relación con privilegios
       },
     });
 
-    // Transformar los datos para renombrar campos
     const renamedUsers = users.map((user) => ({
       ID: user.PK_user,
       Nombre: user.firstName,
       Apellido: user.lastName,
-      Privilegio: user.tbprivileges.privilege,
-      Ingreso: user.lastLogin
-        ? new Date(user.lastLogin).toLocaleString("es-ES", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          })
-        : "Nunca",
-
-      Estado: user.status,
-      Creado: new Date(user.createdAt).toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }),
+      Telefono: user.phoneNumber || "No disponible",
+      Email: user.email,
+      Estado: user.status ? "Activo" : "Inactivo",
+      Privilegio: user.privilege ? user.privilege.privilege : "No asignado",
+      ÚltimoLogin: user.lastLogin
+        ? new Date(user.lastLogin).toLocaleString("es-ES")
+        : "No disponible",
+      Registro: new Date(user.createdAt).toLocaleDateString("es-ES"),
     }));
 
     return NextResponse.json(renamedUsers);
   } catch (error) {
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: "Error al obtener los usuarios" },
+      { status: 500 }
+    );
+  }
+}
+
+// Método POST: Crear un nuevo usuario
+export async function POST(request) {
+  try {
+    const { firstName, lastName, phoneNumber, email, password, FK_privilege } =
+      await request.json();
+
+    // Validar si el email ya existe
+    const existingUser = await prisma.tbusers.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "El correo ya está registrado" },
+        { status: 400 }
+      );
+    }
+
+    // Crear usuario
+    const newUser = await prisma.tbusers.create({
+      data: {
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        password, // ⚠️ Importante: Se debe encriptar antes en un futuro
+        FK_privilege,
+        status: true,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Usuario creado exitosamente",
+      status: 201,
+      data: newUser,
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Error al crear el usuario" },
       { status: 500 }
     );
   }
