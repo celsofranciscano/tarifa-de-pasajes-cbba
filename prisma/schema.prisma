@@ -1,105 +1,110 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js" // Especifica que el cliente de Prisma usará JavaScript
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "sqlite" // Define que la base de datos utilizada será SQLite
+  url      = env("DATABASE_URL") // Obtiene la URL de conexión de una variable de entorno
 }
 
-
 model tbprivileges {
-  PK_privilege Int @id @default(autoincrement())
-  privilege   String  @unique
-  status      Boolean @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime?
-  users       tbusers[]
+  PK_privilege Int       @id @default(autoincrement()) // Clave primaria autoincrementable
+  privilege    String    @unique // Nombre del privilegio, debe ser único
+  status       Boolean   @default(true) // Indica si el privilegio está activo o no
+  createdAt    DateTime  @default(now()) // Fecha de creación con valor por defecto de la fecha actual
+  updatedAt    DateTime? // Fecha de actualización, puede ser nula
+  tbusers      tbusers[] // Relación con los usuarios que tienen este privilegio
 }
 
 model tbusers {
-  PK_user      Int @id @default(autoincrement())
-  FK_privilege Int
-  firstName    String
-  lastName     String
-  phoneNumber  String?
-  email        String  @unique
-  blockedUntil DateTime?
-  password     String
-  profileImage String?
-  lastLogin    DateTime?
-  status       Boolean @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime?
-  privilege    tbprivileges @relation(fields: [FK_privilege], references: [PK_privilege])
+  PK_user      Int          @id @default(autoincrement()) // Clave primaria autoincrementable
+  FK_privilege Int // Clave foránea que referencia el privilegio del usuario
+  firstName    String // Nombre del usuario
+  lastName     String // Apellido del usuario
+  phoneNumber  String? // Número de teléfono opcional
+  email        String       @unique // Correo electrónico único
+  blockedUntil DateTime? // Fecha hasta la cual el usuario está bloqueado (opcional)
+  password     String // Contraseña del usuario
+  profileImage String? // Imagen de perfil del usuario (opcional)
+  lastLogin    DateTime? // Última fecha de inicio de sesión
+  status       Boolean      @default(true) // Estado del usuario (activo o inactivo)
+  createdAt    DateTime     @default(now()) // Fecha de creación
+  updatedAt    DateTime? // Fecha de actualización (puede ser nula)
+  tbprivileges    tbprivileges @relation(fields: [FK_privilege], references: [PK_privilege]) // Relación con la tabla de privilegios
 }
 
 model tbfares {
-  PK_fare   Int @id @default(autoincrement())
-  userType  String
-  amount    Float
-  status    Boolean @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime?
-  passengers tbpassenger[]
+  PK_fare    Int           @id @default(autoincrement()) // Clave primaria autoincrementable
+  userType   String // Tipo de usuario al que aplica la tarifa
+  amount     Float // Monto de la tarifa
+  status     Boolean       @default(true) // Estado de la tarifa (activa o inactiva)
+  createdAt  DateTime      @default(now()) // Fecha de creación
+  updatedAt  DateTime? // Fecha de actualización
+  tbpassenger tbpassenger[] // Relación con los pasajeros que tienen esta tarifa asignada
 }
 
 model tbpassenger {
-  PK_passenger  Int @id @default(autoincrement())
-  FK_fare       Int
-  firstName     String
-  lastName      String
-  profileImage  String?
-  CI            String  @unique
-  phone         String?
-  birthDate     DateTime
-  gender        String
-  infracciones  Int?
-  status        Boolean @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime?
-  fare          tbfares @relation(fields: [FK_fare], references: [PK_fare])
-  details       tbdetailspassenger?
-  complaints    tbcomplaints[]
-}
-
-model tbdetailspassenger {
-  PK_detail  Int @id @default(autoincrement())
-  FK_passenger Int @unique
-  address    String
-  email      String @unique
-  status     Boolean @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime?
-  passenger  tbpassenger @relation(fields: [FK_passenger], references: [PK_passenger])
+  PK_passenger Int            @id @default(autoincrement()) // Clave primaria autoincrementable
+  FK_fare      Int // Clave foránea que referencia la tarifa del pasajero
+  firstName    String // Nombre del pasajero
+  lastName     String // Apellido del pasajero
+  email        String?        @unique // Correo electrónico único (opcional)
+  password     String? // Contraseña del pasajero (opcional)
+  CI           String         @unique // Cédula de identidad del pasajero (única)
+  phone        String? // Número de teléfono opcional
+  profileImage String? // Imagen de perfil opcional
+  birthDate    DateTime // Fecha de nacimiento del pasajero
+  address      String? // Dirección del pasajero (opcional)
+  gender       String // Género del pasajero
+  infracciones Int? // Número de infracciones cometidas (opcional)
+  status       Boolean        @default(true) // Estado del pasajero (activo o inactivo)
+  createdAt    DateTime       @default(now()) // Fecha de creación
+  updatedAt    DateTime? // Fecha de actualización
+  tbfares         tbfares        @relation(fields: [FK_fare], references: [PK_fare]) // Relación con la tabla de tarifas
+  tbcomplaints tbcomplaints[] // Relación con las denuncias hechas por el pasajero
 }
 
 model tbstatuscomplaints {
-  PK_status   Int @id @default(autoincrement())
-  statusName  String  @unique
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime?
-  complaints  tbcomplaints[]
+  PK_status   Int            @id @default(autoincrement()) // Clave primaria autoincrementable
+  statusName  String         @unique // Nombre del estado de la denuncia (único)
+  description String // Descripción del estado de la denuncia
+  createdAt   DateTime       @default(now()) // Fecha de creación
+  updatedAt   DateTime? // Fecha de actualización
+  tbcomplaints  tbcomplaints[] // Relación con las denuncias que tienen este estado
+}
+
+model tbtransportline {
+  PK_transport   Int       @id @default(autoincrement()) // Clave primaria autoincrementable
+  name           String // Nombre único de la línea de transporte
+  route          String? // Ruta que sigue la línea de transporte (opcional)
+  association    String? // Ruta que sigue la línea de transporte (opcional)
+  representative String? // Nombre del conductor principal o responsable (opcional)
+  contactNumber  String? // Número de contacto de la línea de transporte (opcional)
+  startLocation  String? // Ubicación de inicio de la línea de transporte (opcional)
+  endLocation    String? // Ubicación final de la línea de transporte (opcional)
+  description    String? // Descripción opcional de la línea de transporte
+  status         Boolean   @default(true) // Estado (activo o inactivo) de la línea de transporte
+  createdAt      DateTime  @default(now()) // Fecha de creación de la línea
+  updatedAt      DateTime? // Fecha de la última actualización (opcional)
+
+  tbcomplaints tbcomplaints[] // Relación con las denuncias asociadas a esta línea de transporte
 }
 
 model tbcomplaints {
-  PK_complaint     Int @id @default(autoincrement())
-  FK_passenger     Int
-  FK_status        Int
-  transportLine    String
-  vehiclePlate     String
-  incidentRelation String
-  description      String
-  correctAmount    Float
-  chargedAmount    Float
-  image           String?
-  status          Boolean @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime?
-  passenger       tbpassenger @relation(fields: [FK_passenger], references: [PK_passenger])
-  statusComplaint tbstatuscomplaints @relation(fields: [FK_status], references: [PK_status])
+  PK_complaint       Int                @id @default(autoincrement()) // Clave primaria autoincrementable
+  FK_passenger       Int // Clave foránea que referencia al pasajero que hizo la denuncia
+  FK_status          Int // Clave foránea que referencia el estado de la denuncia
+  FK_transport       Int? // Clave foránea que referencia a la línea de transporte involucrada
+  transportLine      String // Línea de transporte involucrada en la denuncia
+  vehiclePlate       String // Placa del vehículo denunciado
+  violations         String // Tipo de incidencia debe ser guardado en un 
+  incidentRelation   String // Relación del incidente con el pasajero
+  description        String? // Descripción detallada del incidente
+  image              String? // Imagen de evidencia opcional
+  status             Boolean            @default(true) // Estado de la denuncia (activa o inactiva)
+  createdAt          DateTime           @default(now()) // Fecha de creación
+  updatedAt          DateTime? // Fecha de actualización
+  passenger          tbpassenger        @relation(fields: [FK_passenger], references: [PK_passenger]) // Relación con el pasajero que hizo la denuncia
+  tbstatuscomplaints tbstatuscomplaints @relation(fields: [FK_status], references: [PK_status]) // Relación con el estado de la denuncia
+  tbtransportline    tbtransportline?    @relation(fields: [FK_transport], references: [PK_transport]) // Relación con la línea de transporte
 }

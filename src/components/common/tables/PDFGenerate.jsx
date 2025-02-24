@@ -1,12 +1,11 @@
-function PDFgenerate({ filteredData }) {
+function PDFgenerate({ filteredData,title }) {
   const generatePDF = () => {
-    if (!filteredData || filteredData.length === 0) {
-      console.warn("No hay datos disponibles para exportar.");
+    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+      alert("No hay datos disponibles para exportar.");
       return;
     }
 
-    // Contenido HTML dinámico con estilos
-    let htmlContent = `
+    const htmlContent = `
       <!DOCTYPE html>
       <html lang="es">
         <head>
@@ -14,181 +13,105 @@ function PDFgenerate({ filteredData }) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Reporte de Datos</title>
           <style>
-            * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
+            @page {
+              size: A4;
+              margin: 20mm;
             }
             body {
-              font-family: "Arial", sans-serif;
-              background-color: #ffffff;
+              font-family: 'Arial', sans-serif;
+              margin: 20px;
               color: #333;
-              line-height: 1.6;
-              padding: 50px;
             }
-            .container {
-              width: 100%;
-              margin: 0 auto;
-              background: #ffffff;
-              padding: 40px;
-            }
-            .membrete {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 20px;
-            }
-            .membrete img {
-              width: 100px;
-              height: auto;
-            }
-            .membrete div {
-              flex-grow: 1;
-              text-align: center;
-            }
-            .membrete h1 {
-              font-size: 32px;
-              font-weight: 800;
-              color: #000000;
-            }
-            .membrete p {
-              font-size: 16px;
-              color: #000000;
-            }
-            .lineas div {
-              height: 5px;
-            }
-            .linea-roja {
-              background-color: red;
-            }
-            .linea-amarilla {
-              background-color: yellow;
-            }
-            .linea-verde {
-              background-color: green;
-            }
-            .informacion {
-              text-align: center;
-              font-size: 16px;
-              color: #000000;
-              font-weight: 600;
-            }
-            .titulo {
-              font-size: 25px;
-              font-weight: 500;
-              color: black;
-              text-align: center;
-              padding: 20px 0;
-            }
-            .date {
-              text-align: right;
-              margin-top: 20px;
+            p {
+              font-size: 14px;
+              color: #666;
             }
             table {
               width: 100%;
               border-collapse: collapse;
               margin-top: 20px;
-              border: 1px solid #ddd;
+              font-size: 14px;
             }
             table th,
             table td {
-              padding: 12px 15px;
+              padding: 8px;
               text-align: left;
               border: 1px solid #ddd;
             }
             table th {
-              background-color: #e4e4e7;
-              color: black;
+              background-color: #f0f0f0;
               font-weight: bold;
             }
-            table tr:nth-child(even) {
+            table tbody tr:nth-child(even) {
               background-color: #f9f9f9;
             }
-            table tr:hover {
+            table tbody tr:hover {
               background-color: #f1f1f1;
             }
-            footer {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 10px 40px;
-              background-color: #fff;
-              font-size: 14px;
-              color: #333;
+            .footer {
+              margin-top: 20px;
+              font-size: 12px;
+              text-align: center;
             }
           </style>
         </head>
         <body>
-          <div class="container">
-            <div class="membrete">
-              <img src="/logo.jpg" alt="Logo" />
-              <div>
-                <h1>Agua Potable el Palmar - APOPAL</h1>
-                <p class="informacion">
-                  Fundada el 31 de enero de 1995 con PJ 001/95 <br />
-                  Afiliado a la Mancomunidad 1º de Mayo - Distrito Nº 9 - Cochabamba - Bolivia
-                </p>
-              </div>
-              <img src="/logo.jpg" alt="Imagen Cochabamba" />
-            </div>
-            <div class="lineas">
-              <div class="linea-roja"></div>
-              <div class="linea-amarilla"></div>
-              <div class="linea-verde"></div>
-            </div>
-            <div class="date">
-              <p>Fecha de emisión: ${new Date().toLocaleDateString("es-ES")}</p>
-              <p>Hora de emisión: ${new Date().toLocaleTimeString("es-ES")}</p>
-            </div>
-            <h1 class="titulo">Lista de los Socios de Agua Potable El Palmar - APOPAL</h1>
-            <section class="table-section">
-              <table>
-                <thead>
-                  <tr>
-                    ${Object.keys(filteredData[0])
-                      .map((header) => `<th>${header}</th>`)
-                      .join("")}
-                  </tr>
-                </thead>
-                <tbody>
-                  ${filteredData
-                    .map(
-                      (row) =>
-                        `<tr>${Object.values(row)
-                          .map((value) => `<td>${value !== null && value !== undefined ? value : ""}</td>`)
-                          .join("")}</tr>`
-                    )
-                    .join("")}
-                </tbody>
-              </table>
-            </section>
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="font-size: 26px; margin-bottom: 5px;">Agua Potable el Palmar - APOPAL</h1>
+            <p style="font-size: 16px; color: #666; margin-top: 0;">Cochabamba - Bolivia</p>
           </div>
-          <footer>
-            <div>www.apopal.com</div>
-            <div>Página 1</div>
-          </footer>
+
+          <div style="display: flex; flex-direction: column; align-items: flex-end; font-size: 14px; color: #333; margin-bottom: 20px;">
+            <div><strong>Fecha de emisión:</strong> ${new Date().toLocaleDateString("es-ES")}</div>
+            <div><strong>Hora de emisión:</strong> ${new Date().toLocaleTimeString("es-ES")}</div>
+          </div>
+
+          <h2 style="font-size: 22px; padding-bottom: 5px; margin-bottom: 20px;">
+            ${title}
+          </h2>
+
+          <table>
+            <thead>
+              <tr>
+                ${Object.keys(filteredData[0])
+                  .map((header) => `<th>${header}</th>`)
+                  .join("")}
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredData
+                .map(
+                  (row) =>
+                    `<tr>${Object.values(row)
+                      .map(
+                        (value) =>
+                          `<td>${
+                            value !== null && value !== undefined ? value : ""
+                          }</td>`
+                      )
+                      .join("")}</tr>`
+                )
+                .join("")}
+            </tbody>
+          </table>
+
+          <div class="footer">Reporte generado automáticamente</div>
         </body>
       </html>
     `;
 
-      // Crear un Blob con el contenido HTML
-      const blob = new Blob([htmlContent], { type: "application/pdf" });
-
-      // Crear una URL para el Blob
-      const url = URL.createObjectURL(blob);
-  
-      // Crear un enlace de descarga
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Reporte_APOPAL_${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      // Agregar el enlace al documento, hacer clic y eliminarlo
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-  
-      // Liberar la URL
-      URL.revokeObjectURL(url);
+    const printWindow = window.open("", "_blank", "width=800,height=600");
+    if (printWindow) {
+      printWindow.document.open();
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.onload = function () {
+        printWindow.print();
+      };
+    } else {
+      console.warn("No se pudo abrir la ventana para imprimir.");
+    }
   };
 
   return (

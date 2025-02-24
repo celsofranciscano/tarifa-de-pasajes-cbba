@@ -3,7 +3,37 @@
 @tailwind utilities;
 
 @layer components {
-    .input {
-      @apply bg-zinc-200  border border-zinc-300  rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-transparent;
-    }
+  .input {
+    @apply bg-zinc-800  border border-zinc-700  rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent;
   }
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px #ffd700;
+  color: transparent;
+}
+.glow-effect {
+  position: relative;
+}
+.glow-effect::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 215, 0, 0.2) 0%,
+    transparent 70%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+.card-hover {
+  /* transition: all 0.3s ease; */
+}
+.card-hover:hover {
+  /* transform: translateY(-10px); */
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}

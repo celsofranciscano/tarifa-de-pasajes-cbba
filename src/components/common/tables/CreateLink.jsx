@@ -8,7 +8,7 @@ function CreateLink({name,href}) {
       href={`${pathname}/create`}
       className=" flex gap-2 bg-blue-500 text-white px-4 py-2 rounded-md"
     >
-      <span>Agregar {name}</span>
+      <span>Registrar {name}</span>
 
       <svg
         className="w-6 h-6 text-current"

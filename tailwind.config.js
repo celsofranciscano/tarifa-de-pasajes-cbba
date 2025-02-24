@@ -8,8 +8,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        dark: "#0F1117",
+        gold: {
+          light: "#FFE169",
+          DEFAULT: "#FFD700",
+          dark: "#B8860B",
+        },
+        animation: {
+          glow: "glow 2s ease-in-out infinite alternate",
+        },
+        keyframes: {
+          glow: {
+            from: { "box-shadow": "0 0 20px #FFD700" },
+            to: { "box-shadow": "0 0 30px #FFE169" },
+          },
+        },
       },
     },
   },

@@ -5,7 +5,7 @@ import Tooltip from "@/components/common/tooltip/Tooltip";
 import PDFgenerate from "./PDFGenerate";
 import CSVgenerate from "./CSVGenerate";
 
-function ExportTable({ filteredData }) {
+function ExportTable({ filteredData, dataSpanish, title }) {
   const [showOptions, setShowOptions] = useState(false);
   const cardRef = useRef(null); // Referencia para el contenedor del menú
 
@@ -31,7 +31,7 @@ function ExportTable({ filteredData }) {
   }, []);
 
   return (
-    <div className="relative inline-block" ref={cardRef}>
+    <div className="relative z-10 inline-block" ref={cardRef}>
       <Tooltip content="Exportar" position="top">
         <button
           className="hover:bg-zinc-200 rounded-md shadow-md p-2"
@@ -58,12 +58,12 @@ function ExportTable({ filteredData }) {
       </Tooltip>
 
       <div
-        className={`absolute grid top-full mt-2 bg-white p-2 w-40 shadow-2xl rounded-md ${
+        className={`absolute grid top-full right-0 mt-2 bg-white p-6 w-64 shadow-2xl rounded-md ${
           showOptions ? "block" : "hidden"
         }`}
       >
         <p className="text-sm text-zinc-600 pb-2">Descargar en formato:</p>
-        <PDFgenerate filteredData={filteredData} />
+        <PDFgenerate filteredData={dataSpanish} title={title} />
         <CSVgenerate filteredData={filteredData} />
       </div>
     </div>

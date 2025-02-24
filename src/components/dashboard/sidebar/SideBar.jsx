@@ -14,11 +14,11 @@ function DashboardSideBar() {
   return (
     <>
       <header
-        className={`bg-white shadow-md z-20 h-16 fixed w-full flex items-center justify-between px-4  text-white`}
+        className={`bg-zinc-900 shadow-md z-20 h-16 fixed w-full flex items-center justify-between px-4  text-white`}
       >
         <a className="flex gap-1 items-center" href="/">
           {/* <img className="w-12" src="/logo-idiomify.png" alt="logo idiomify" /> */}
-          <span className="text-2xl font-bold  text-black ">APOPAL</span>
+          <span className="text-2xl font-bold  text-gold ">TARIFA</span>
         </a>
 
         <div className="flex items-center justify-center gap-4">
@@ -59,13 +59,13 @@ function DashboardSideBar() {
         style={{ scrollbarWidth: "none" }}
         className={` ${
           isSidebarOpen ? "block" : "hidden"
-        }   md:block bg-white shadow-md overflow-auto  w-72 md:w-60  border-r dark:border-none h-screen    fixed top-16  px-4 py-8`}
+        }   md:block bg-zinc-900 shadow-md overflow-auto z-50 w-72 md:w-60  border-r dark:border-none h-screen    fixed top-16  px-4 py-2 `}
       >
         <nav className="">
-          <ul className="grid  pt-8 ">
+          <ul className="grid gap-0.5 pt-2 pb-28">
             <NavLink
               name={"Inicio"}
-              href={"/"}
+              href={"/dashboard"}
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
             >
@@ -89,8 +89,8 @@ function DashboardSideBar() {
             </NavLink>
 
             <NavLink
-              name={"Socios"}
-              href={"/dashboard/partner"}
+              name={"Tarifas"}
+              href={"/dashboard/tarifas"}
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
             >
@@ -112,44 +112,16 @@ function DashboardSideBar() {
               </svg>
             </NavLink>
 
-            {/* <NavLink
-              name={"Servicios"}
-              href={"/servicios"}
+            <NavLink
+              name={"Estados"}
+              href={"/dashboard/estados"}
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               sublinks={[
-                { name: "Desarrollo Web", href: "/servicios/web" },
-                { name: "Diseño Gráfico", href: "/servicios/diseno-grafico" },
-                {
-                  name: "Marketing Digital",
-                  href: "/servicios/marketing-digital",
-                },
+                { name: "Ultimos", href: "/dashboard/estados/ultimos" },
+                { name: "Reportes", href: "/dashboard/estados/reportes" },
+                { name: "Nuevo", href: "/dashboard/estados/nuevo" },
               ]}
-            >
-              <svg
-                className="w-5 h-5 text-current"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 9h3m-3 3h3m-3 3h3m-6 1c-.306-.613-.933-1-1.618-1H7.618c-.685 0-1.312.387-1.618 1M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm7 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"
-                />
-              </svg>
-            </NavLink> */}
-
-            <NavLink
-              name={"Lecturacion"}
-              href={"/dashboard/lecturacion"}
-              isSidebarOpen={isSidebarOpen}
-              setIsSidebarOpen={setIsSidebarOpen}
             >
               <svg
                 className="w-5 h-5 text-current"
@@ -171,57 +143,16 @@ function DashboardSideBar() {
             </NavLink>
 
             <NavLink
-              name={"Asistencias"}
-              href={"/dashboard/asistencias"}
+              name={"Transportes"}
+              href={"/dashboard/income"}
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
-            >
-              <svg
-                className="w-5 h-5 text-current"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
-            </NavLink>
-            <NavLink
-              name={"Pagos de consumo"}
-              href={"/dashboard/consumo"}
-              isSidebarOpen={isSidebarOpen}
-              setIsSidebarOpen={setIsSidebarOpen}
-            >
-              <svg
-                className="w-5 h-5 text-current"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  d="M8 7V6a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-1M3 18v-7a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
-                />
-              </svg>
-            </NavLink>
-            <NavLink
-              name={"Balance"}
-              href={"/dashboard/balance"}
-              isSidebarOpen={isSidebarOpen}
-              setIsSidebarOpen={setIsSidebarOpen}
+              sublinks={[
+                { name: "Ultimos", href: "/dashboard/income/reports" },
+                { name: "Reportes", href: "/dashboard/income/consumption" },
+                { name: "Nuevo", href: "/dashboard/income/fines" },
+                { name: "Aportes", href: "/dashboard/income/extras" },
+              ]}
             >
               <svg
                 className="w-5 h-5 text-current"
@@ -237,18 +168,23 @@ function DashboardSideBar() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M4 4.5V19a1 1 0 0 0 1 1h15M7 14l4-4 4 4 5-5m0 0h-3.207M20 9v3.207"
+                  d="M3 10h18M6 14h2m3 0h5M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z"
                 />
               </svg>
             </NavLink>
             <NavLink
-              name={"Recortes"}
-              href={"/dashboard/recortes"}
+              name={"Pasajeros"}
+              href={"/dashboard/pasajeros"}
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
+              sublinks={[
+                { name: "Ultimos", href: "/dashboard/expenses/reports" },
+                { name: "Reportes", href: "/dashboard/expenses/operational" },
+                { name: "Lista", href: "/dashboard/expenses/material" },
+              ]}
             >
               <svg
-                className="w-5 h-5 text-current"
+                class="w-5 h-5 text-current "
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -259,9 +195,37 @@ function DashboardSideBar() {
                 <path
                   stroke="currentColor"
                   stroke-linecap="round"
-                  stroke-linejoin="round"
                   stroke-width="2"
-                  d="M11 9H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h6m0-6v6m0-6 5.419-3.87A1 1 0 0 1 18 5.942v12.114a1 1 0 0 1-1.581.814L11 15m7 0a3 3 0 0 0 0-6M6 15h3v5H6v-5Z"
+                  d="M4.5 17H4a1 1 0 0 1-1-1 3 3 0 0 1 3-3h1m0-3.05A2.5 2.5 0 1 1 9 5.5M19.5 17h.5a1 1 0 0 0 1-1 3 3 0 0 0-3-3h-1m0-3.05a2.5 2.5 0 1 0-2-4.45m.5 13.5h-7a1 1 0 0 1-1-1 3 3 0 0 1 3-3h3a3 3 0 0 1 3 3 1 1 0 0 1-1 1Zm-1-9.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"
+                />
+              </svg>
+            </NavLink>
+            <NavLink
+              name={"Denuncias"}
+              href={"/dashboard/denuncias"}
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+              sublinks={[
+                { name: "Ultimos", href: "/dashboard/expenses/reports" },
+                { name: "Reportes", href: "/dashboard/expenses/operational" },
+                { name: "Lista", href: "/dashboard/expenses/material" },
+              ]}
+            >
+              <svg
+                class="w-5 h-5 text-current"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M7.556 8.5h8m-8 3.5H12m7.111-7H4.89a.896.896 0 0 0-.629.256.868.868 0 0 0-.26.619v9.25c0 .232.094.455.26.619A.896.896 0 0 0 4.89 16H9l3 4 3-4h4.111a.896.896 0 0 0 .629-.256.868.868 0 0 0 .26-.619v-9.25a.868.868 0 0 0-.26-.619.896.896 0 0 0-.63-.256Z"
                 />
               </svg>
             </NavLink>

@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
       <SessionProvider>
         <html lang="en">
           <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-200 text-zinc-700`}
+            className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-950 text-zinc-400`}
           >
             <DashboardSideBar />
             <main className="pt-20 md:pl-64 px-4">{children}</main>

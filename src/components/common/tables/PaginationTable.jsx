@@ -1,6 +1,17 @@
 "use client";
 
 function PaginationTable({ currentPage, totalPages, handlePageChange }) {
+  // Definir el rango de páginas a mostrar
+  const pageRange = 3;
+  let startPage = Math.max(1, currentPage - 1);
+  let endPage = Math.min(totalPages, currentPage + 1);
+
+  // Mostrar las páginas alrededor de la página actual
+  const pagesToShow = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pagesToShow.push(i);
+  }
+
   return (
     <div className="flex items-center justify-between mt-4 space-x-2">
       <div className="mb-4">
@@ -13,9 +24,7 @@ function PaginationTable({ currentPage, totalPages, handlePageChange }) {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-3 py-1 text-black ${
-            currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          className={`px-3 py-1 text-black ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           <svg
             className="w-4 h-4"
@@ -30,26 +39,21 @@ function PaginationTable({ currentPage, totalPages, handlePageChange }) {
           </svg>
         </button>
 
-        {Array.from({ length: totalPages }, (_, index) => (
+        {/* Mostrar solo las páginas alrededor de la actual */}
+        {pagesToShow.map((page) => (
           <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`px-3 py-1 rounded ${
-              currentPage === index + 1
-                ? "bg-white text-black"
-                : "text-zinc-400"
-            }`}
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={`px-3 py-1 rounded ${currentPage === page ? "bg-white text-black" : "text-zinc-400"}`}
           >
-            {index + 1}
+            {page}
           </button>
         ))}
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-3 py-1 text-black ${
-            currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          className={`px-3 py-1 text-black ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           <svg
             className="w-4 h-4"

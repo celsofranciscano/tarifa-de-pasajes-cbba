@@ -1,24 +1,70 @@
-function SortTable() {
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import Tooltip from "@/components/common/tooltip/Tooltip";
+import PDFgenerate from "./PDFGenerate";
+import CSVgenerate from "./CSVGenerate";
+
+function SortTable({ filteredData, dataSpanish }) {
+  const [showOptions, setShowOptions] = useState(false);
+  const cardRef = useRef(null); // Referencia para el contenedor del menú
+
+  const toggleOptions = () => {
+    setShowOptions((prev) => !prev);
+  };
+
+  const handleClickOutside = (event) => {
+    // Verifica si el clic ocurrió fuera del cardRef
+    if (cardRef.current && !cardRef.current.contains(event.target)) {
+      setShowOptions(false);
+    }
+  };
+
+  useEffect(() => {
+    // Agregar un listener al evento "click" en el documento
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Limpiar el listener cuando se desmonta el componente
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <button className="hover:bg-zinc-200 rounded-md shadow-md p-2">
-      <svg
-        className="w-6 h-6 text-current"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        fill="none"
-        viewBox="0 0 24 24"
+    <div className="relative z-10 inline-block" ref={cardRef}>
+      <Tooltip content="Ordenar" position="top">
+        <button
+          className="hover:bg-zinc-200 rounded-md shadow-md p-2"
+          onClick={toggleOptions}
+        >
+          <svg
+            className="w-6 h-6 text-current"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M8 20V7m0 13-4-4m4 4 4-4m4-12v13m0-13 4 4m-4-4-4 4"
+            />
+          </svg>
+        </button>
+      </Tooltip>
+
+      <div
+        className={`absolute grid top-full right-0 mt-2 bg-white p-6 w-64 shadow-2xl rounded-md ${
+          showOptions ? "block" : "hidden"
+        }`}
       >
-        <path
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M8 20V7m0 13-4-4m4 4 4-4m4-12v13m0-13 4 4m-4-4-4 4"
-        />
-      </svg>
-    </button>
+        <p className="text-sm text-zinc-600 pb-2">Ordenar segun:</p>
+      </div>
+    </div>
   );
 }
 

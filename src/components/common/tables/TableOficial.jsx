@@ -12,12 +12,25 @@ import EditLink from "./EditLink";
 import DetailLink from "./DetailLink";
 import CreateLink from "./CreateLink";
 import PaginationTable from "./PaginationTable";
+import ProfileLink from "./ProfileLink";
 
-function Table({ url, columns, name, title }) {
+function TableOficial({
+  url,
+  columns,
+  rows,
+  name,
+  title,
+  isCreate,
+  isProfile,
+}) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  // dataSpanish contendrá los registros con las claves renombradas (en español)
+  const [dataSpanish, setDataSpanish] = useState([]);
+  // visibleColumns controla qué columnas se muestran; inicialmente todas
+  const [visibleColumns, setVisibleColumns] = useState(columns);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(200);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +45,24 @@ function Table({ url, columns, name, title }) {
     fetchData();
   }, [url]);
 
-  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  // Actualiza dataSpanish cada vez que cambian filteredData o visibleColumns
+  useEffect(() => {
+    const renamedData = filteredData.map((item) => {
+      let renamedItem = {};
+      visibleColumns.forEach((col) => {
+        const index = columns.indexOf(col);
+        if (index !== -1) {
+          const apiKey = rows[index];
+          renamedItem[col] = item[apiKey];
+        }
+      });
+      return renamedItem;
+    });
+    setDataSpanish(renamedData);
+    setCurrentPage(1); // Reinicia la paginación al cambiar datos
+  }, [filteredData, columns, rows, visibleColumns]);
+
+  const totalPages = Math.ceil(dataSpanish.length / rowsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -40,10 +70,25 @@ function Table({ url, columns, name, title }) {
 
   const handleRowsPerPageChange = (e) => {
     setRowsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reinicia la paginación
+    setCurrentPage(1);
   };
 
-  const paginatedData = filteredData.slice(
+  // Actualiza las columnas visibles; no se permite que queden vacías
+  const handleColumnVisibilityChange = (column, isVisible) => {
+    setVisibleColumns((prev) => {
+      // Si se intenta ocultar y es la única visible, se ignora
+      if (!isVisible && prev.length === 1 && prev.includes(column)) {
+        return prev;
+      }
+      if (isVisible) {
+        return prev.includes(column) ? prev : [...prev, column];
+      } else {
+        return prev.filter((col) => col !== column);
+      }
+    });
+  };
+
+  const paginatedData = dataSpanish.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -51,31 +96,41 @@ function Table({ url, columns, name, title }) {
   return (
     <section className="grid gap-4 shadow-md rounded-md bg-white py-6 p-4">
       {/* Barra de búsqueda y filtro */}
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-medium">{title}</h1>
-        <CreateLink name={name} href={"/"} />
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <h1 className="text-xl font-bold">{title}</h1>
+        {isCreate && <CreateLink name={name} href={"/"} />}
       </div>
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+        <div className="flex items-center gap-2 justify-center md:order-last">
+          <FilterTable />
+          <ExportTable
+            filteredData={filteredData}
+            dataSpanish={dataSpanish}
+            title={title}
+          />
+          <SortTable />
+          <ConfigTable
+            columns={columns}
+            rows={rows}
+            handleColumnVisibilityChange={handleColumnVisibilityChange}
+          />
+        </div>
+        <div className="flex items-center justify-center gap-2 md:order-first">
           <span>Mostrar</span>
           <select
             className="input"
             value={rowsPerPage}
             onChange={handleRowsPerPageChange}
           >
-           
-            <option value={200}>200</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
           </select>
           <span>registros</span>
         </div>
-
-        <div className="flex items-center gap-4">
+        <div className="w-full md:w-fit">
           <SearchTable data={data} setFilteredData={setFilteredData} />
-          <FilterTable />
-          <ExportTable filteredData={filteredData} />
-          <SortTable />
-          <ConfigTable />
         </div>
       </div>
 
@@ -84,7 +139,7 @@ function Table({ url, columns, name, title }) {
         <table className="w-full text-sm text-left text-zinc-500 bg-zinc-100 rounded-md">
           <thead className="text-xs uppercase bg-zinc-200">
             <tr>
-              {columns?.map((column, index) => (
+              {visibleColumns.map((column, index) => (
                 <th
                   key={index}
                   className="px-4 py-3 text-black hover:cursor-pointer"
@@ -96,34 +151,25 @@ function Table({ url, columns, name, title }) {
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row, index) => {
-              console.log(row); // Esto te ayudará a inspeccionar el objeto
-              return (
-                <tr key={index} className="border-b border">
-                  {columns?.map((column, colIndex) => (
-                    <td key={colIndex} className="px-4 text-zinc-500">
-                      {column === "Estado" ? (
-                        row[column] ? (
-                          <span className="px-2 py-1 rounded-md bg-blue-500 text-white">
-                            Activo
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 rounded-md bg-red-500 text-white">
-                            Inactivo
-                          </span>
-                        )
-                      ) : (
-                        row[column]
-                      )}
-                    </td>
-                  ))}
-                  <td className="flex items-center py-3 justify-center">
-                    <EditLink id={row.ID} />
-                    <DetailLink id={row.ID} />
+            {paginatedData.map((row, index) => (
+              <tr key={index} className="border-b border">
+                {visibleColumns.map((column, colIndex) => (
+                  <td key={colIndex} className="px-4 text-zinc-500">
+                    {row[column] !== undefined ? row[column] : ""}
                   </td>
-                </tr>
-              );
-            })}
+                ))}
+                <td className="flex items-center py-3 gap-4 justify-center">
+                  {isProfile ? (
+                    <ProfileLink id={row["Codigo"]} />
+                  ) : (
+                    <>
+                      <EditLink id={row[columns[0]]} />
+                      <DetailLink id={row[columns[0]]} />
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
@@ -138,4 +184,4 @@ function Table({ url, columns, name, title }) {
   );
 }
 
-export default Table;
+export default TableOficial;

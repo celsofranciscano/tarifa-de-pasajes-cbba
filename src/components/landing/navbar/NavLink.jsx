@@ -1,10 +1,21 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-function NavLink({ name, href, sublinks, children,isSidebarOpen,setIsSidebarOpen }) {
+function NavLink({
+  name,
+  href,
+  sublinks,
+  children,
+  isSidebarOpen,
+  setIsSidebarOpen,
+}) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
+
   const normalizePath = (path) => path.replace(/\/$/, "");
   const isActive =
     normalizePath(pathname) === normalizePath(href) ||
@@ -13,13 +24,42 @@ function NavLink({ name, href, sublinks, children,isSidebarOpen,setIsSidebarOpen
         (sublink) => normalizePath(pathname) === normalizePath(sublink.href)
       ));
 
+  const handleClick = (e) => {
+    if (sublinks) {
+      e.preventDefault();
+      setOpen((prev) => !prev);
+    } else {
+      if (isSidebarOpen) setIsSidebarOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (containerRef.current && containerRef.current.contains(e.target)) {
+        return;
+      }
+      const isCurrentMenu =
+        normalizePath(pathname) === normalizePath(href) ||
+        (sublinks &&
+          sublinks.some(
+            (sublink) => normalizePath(pathname) === normalizePath(sublink.href)
+          ));
+      if (!isCurrentMenu && open) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [open, pathname, href, sublinks]);
+
   return (
-    <li className="relative group">
+    <li ref={containerRef} className="relative">
       <Link
-      onClick={() => isSidebarOpen && setIsSidebarOpen(false)}
         href={href}
-        className={`hover:bg-zinc-200 md:hover:bg-transparent rounded-md flex justify-between gap-2 items-center py-2 px-4 font-medium hover:text-blue-500 ${
-          isActive ? "text-blue-500 bg-zinc-200 md:bg-transparent" : "text-zinc-700"
+        onClick={handleClick}
+        className={`hover:bg-yellow-400 rounded-md flex justify-between gap-2 items-center py-1.5 px-4 font-medium hover:text-black ${
+          isActive ? "text-black bg-yellow-400" : "text-zinc-400"
         }`}
       >
         <div className="flex items-center gap-2">
@@ -28,7 +68,9 @@ function NavLink({ name, href, sublinks, children,isSidebarOpen,setIsSidebarOpen
         </div>
         {sublinks && (
           <svg
-            className="w-5 h-5  text-current group-hover:rotate-180 transition-transform"
+            className={`w-5 h-5 text-current transition-transform ${
+              open ? "rotate-180" : ""
+            }`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -45,19 +87,21 @@ function NavLink({ name, href, sublinks, children,isSidebarOpen,setIsSidebarOpen
         )}
       </Link>
 
-      {sublinks && (
-        <ul className="md:absolute bg-white  left-0 hidden group-hover:flex flex-col  rounded-md md:w-48 p-4">
+      {sublinks && open && (
+        <ul className=" grid grid-cols-1 gap-1 rounded-md w-full py-2 pl-8  ">
           {sublinks.map((sublink, index) => {
             const isSubActive =
               normalizePath(pathname) === normalizePath(sublink.href);
             return (
-              <li key={index} className="flex flex-col">
+              <li key={index} className="">
                 <Link
-                onClick={() => isSidebarOpen && setIsSidebarOpen(false)}
+                  onClick={() => {
+                    if (isSidebarOpen) setIsSidebarOpen(false);
+                  }}
                   href={sublink.href}
-                  className={`hover:bg-zinc-200 rounded-md py-2 px-4 ${
-                    isSubActive ? "text-black bg-zinc-200" : "text-zinc-700"
-                  } hover:text-black`}
+                  className={`hover:white  rounded-md py-1 px-4 block w-full ${
+                    isSubActive ? "text-black bg-yellow-400" : "text-zinc-400"
+                  } hover:text-black hover:bg-yellow-400`}
                 >
                   {sublink.name}
                 </Link>

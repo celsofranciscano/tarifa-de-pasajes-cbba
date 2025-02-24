@@ -1,51 +1,76 @@
 import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import prisma from "@/lib/db/prisma"; // Asegúrate de que el archivo prisma está configurado correctamente.
+import CredentialsProvider from "next-auth/providers/credentials";
+import prisma from "@/lib/db/prisma";
+import bcrypt from "bcrypt"; // Para comparar contraseñas hasheadas
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [Google],
-  callbacks: {
-    async jwt({ token, account, profile }) {
-      if (account && profile) {
-        // Verificar si el usuario ya existe en la base de datos
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email", placeholder: "ejemplo@correo.com" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Debe proporcionar un email y una contraseña.");
+        }
+
+        // Buscar usuario en la base de datos
         const existingUser = await prisma.tbusers.findUnique({
-          where: { email: profile.email },
+          where: { email: credentials.email },
         });
 
         if (!existingUser) {
-          // Si el usuario no existe, rechazar el login
-          throw new Error("El usuario no existe en la base de datos.");
-        } else {
-          // Si el usuario ya existe, actualizar la marca de tiempo de la última conexión
-          await prisma.tbusers.update({
-            where: { email: profile.email },
-            data: {
-              lastLogin: new Date(), // Actualizar con la fecha y hora actual
-            },
-          });
-
-          // Asignar el privilegio actual del usuario
-          const userPrivilege = await prisma.tbprivileges.findUnique({
-            where: { PK_privilege: existingUser.FK_privilege },
-          });
-          token.privilege = userPrivilege.privilege;
+          throw new Error("El usuario no existe.");
         }
 
-        // Guardar datos del perfil en el token
-        token.user = {
-          email: profile.email,
-          name: profile.name,
-          image: profile.picture,
+        // Comparar la contraseña ingresada con la almacenada en la base de datos
+        const isPasswordValid = await bcrypt.compare(credentials.password, existingUser.password);
+        if (!isPasswordValid) {
+          throw new Error("Contraseña incorrecta.");
+        }
+
+        // Actualizar la última conexión del usuario
+        await prisma.tbusers.update({
+          where: { email: credentials.email },
+          data: { lastLogin: new Date() },
+        });
+
+        // Obtener el privilegio del usuario, añadiendo un chequeo de seguridad
+        const userPrivilege = await prisma.tbprivileges.findUnique({
+          where: { PK_privilege: existingUser.FK_privilege },
+        });
+
+        // Verificar si el privilegio existe antes de retornarlo
+        const privilege = userPrivilege?.privilege || "Usuario";
+
+        // Retornar los datos del usuario asegurándose de que todos los campos estén definidos
+        return {
+          id: existingUser.PK_user?.toString() || "", // Asegura que el ID siempre sea un string
+          email: existingUser.email,
+          firstName: existingUser.firstName,
+          lastName: existingUser.lastName,
+          privilege: privilege,
         };
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user; // Almacena todo el objeto user, ahora con firstName y lastName
+        token.privilege = user.privilege;
       }
       return token;
     },
     async session({ session, token }) {
-      // Transferir el valor de 'privilege' desde el token a la sesión
+      session.user = token.user; // Incluye el objeto user completo
       session.privilege = token.privilege;
-      // Asegurarse de que los datos del usuario estén en la sesión
-      session.user = token.user;
-      return session;
+      return session; 
     },
+  },
+  pages: {
+    signIn: "/login", // Redirigir a una página de inicio de sesión personalizada
   },
 });
