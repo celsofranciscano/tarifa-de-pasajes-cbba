@@ -14,12 +14,11 @@ export async function GET() {
 // POST tbfares
 export async function POST(request) {
   try {
-    const { userType, amount, status } = await request.json();
+    const { userType, amount } = await request.json();
     await prisma.tbfares.create({
       data: {
         userType,
-        amount: Number(amount),
-        status: Boolean(status),
+        amount: Number(amount)
       },
     });
     return NextResponse.json({ message: "Tarifa creada exitosamente" });

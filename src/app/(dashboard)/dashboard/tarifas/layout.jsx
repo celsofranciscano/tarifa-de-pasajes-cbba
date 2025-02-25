@@ -7,9 +7,9 @@ function Layout({ children }) {
   ];
   return (
     <section className="grid gap-4 ">
-      <header className="">
+      {/* <header className="">
         <NavLinkDashboard links={links} />
-      </header>
+      </header> */}
       {children}
       <footer className="py-4"></footer>
     </section>

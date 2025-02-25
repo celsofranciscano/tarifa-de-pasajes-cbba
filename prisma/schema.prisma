@@ -48,15 +48,14 @@ model tbpassenger {
   FK_fare      Int // Clave foránea que referencia la tarifa del pasajero
   firstName    String // Nombre del pasajero
   lastName     String // Apellido del pasajero
-  email        String?        @unique // Correo electrónico único (opcional)
-  password     String? // Contraseña del pasajero (opcional)
-  CI           String         @unique // Cédula de identidad del pasajero (única)
+  email        String        @unique // Correo electrónico único (opcional)
+  password     String // Contraseña del pasajero (opcional)
+  CI           String?         @unique // Cédula de identidad del pasajero (única)
   phone        String? // Número de teléfono opcional
   profileImage String? // Imagen de perfil opcional
-  birthDate    DateTime // Fecha de nacimiento del pasajero
+  birthDate    DateTime? // Fecha de nacimiento del pasajero
   address      String? // Dirección del pasajero (opcional)
-  gender       String // Género del pasajero
-  infracciones Int? // Número de infracciones cometidas (opcional)
+  gender       String? // Género del pasajero
   status       Boolean        @default(true) // Estado del pasajero (activo o inactivo)
   createdAt    DateTime       @default(now()) // Fecha de creación
   updatedAt    DateTime? // Fecha de actualización

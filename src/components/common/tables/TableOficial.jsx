@@ -94,7 +94,7 @@ function TableOficial({
   );
 
   return (
-    <section className="grid gap-4 shadow-md rounded-md bg-white py-6 p-4">
+    <section className="grid gap-4 shadow-md rounded-md bg-zinc-900 py-6 p-4">
       {/* Barra de búsqueda y filtro */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <h1 className="text-xl font-bold">{title}</h1>
@@ -136,25 +136,25 @@ function TableOficial({
 
       {/* Tabla */}
       <section className="overflow-x-auto rounded-md">
-        <table className="w-full text-sm text-left text-zinc-500 bg-zinc-100 rounded-md">
-          <thead className="text-xs uppercase bg-zinc-200">
+        <table className="w-full text-sm text-left text-zinc-400 bg-zinc-800 rounded-md">
+          <thead className="text-xs uppercase bg-zinc-600">
             <tr>
               {visibleColumns.map((column, index) => (
                 <th
                   key={index}
-                  className="px-4 py-3 text-black hover:cursor-pointer"
+                  className="px-4 py-3 text-white hover:cursor-pointer"
                 >
                   {column}
                 </th>
               ))}
-              <th className="px-6 py-3 text-black">Acciones</th>
+              <th className="px-6 py-3 text-white">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {paginatedData.map((row, index) => (
-              <tr key={index} className="border-b border">
+              <tr key={index} className="border-b border border-zinc-700">
                 {visibleColumns.map((column, colIndex) => (
-                  <td key={colIndex} className="px-4 text-zinc-500">
+                  <td key={colIndex} className="px-4 text-zinc-400">
                     {row[column] !== undefined ? row[column] : ""}
                   </td>
                 ))}

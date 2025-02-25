@@ -15,12 +15,12 @@ function PaginationTable({ currentPage, totalPages, handlePageChange }) {
   return (
     <div className="flex items-center justify-between mt-4 space-x-2">
       <div className="mb-4">
-        <span className="text-gray-600">
+        <span className="text-gray-400">
           Página {currentPage} de {totalPages}
         </span>
       </div>
 
-      <div className="flex items-center bg-zinc-200 rounded-md text-xs py-2 px-4">
+      <div className="flex items-center bg-zinc-800 rounded-md text-xs py-2 px-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -44,7 +44,7 @@ function PaginationTable({ currentPage, totalPages, handlePageChange }) {
           <button
             key={page}
             onClick={() => handlePageChange(page)}
-            className={`px-3 py-1 rounded ${currentPage === page ? "bg-white text-black" : "text-zinc-400"}`}
+            className={`px-3 py-1 rounded ${currentPage === page ? "bg-zinc-500 text-white" : "text-zinc-200"}`}
           >
             {page}
           </button>

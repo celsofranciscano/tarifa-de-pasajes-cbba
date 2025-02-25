@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const routePermissions = [
   { route: "/dashboard/settings/*", roles: ["Superadministrador"] },
-  { route: "/dashboard/*", roles: ["Administrador", "Superadministrador"] }
+  { route: "/dashboard/*", roles: ["Administrador", "Superadministrador"] },
 ];
 // const routePermissions = [
 //   { route: "/dashboard/settings/*", roles: ["Superadministrador"] },
@@ -20,16 +20,17 @@ export async function middleware(req) {
   const secret = process.env.AUTH_SECRET;
 
   // Determinar el nombre de la cookie según el entorno
-  const cookieName = process.env.NODE_ENV === 'production' 
-    ? '__Secure-authjs.session-token'
-    : 'authjs.session-token';
+  const cookieName =
+    process.env.NODE_ENV === "production"
+      ? "__Secure-authjs.session-token"
+      : "authjs.session-token";
 
   // Obtener el token de sesión
   const token = await getToken({ req, secret, cookieName });
   const isLoggedIn = !!token;
 
   // 1. Manejar rutas públicas (no protegidas)
-  const isProtectedRoute = routePermissions.some(({ route }) => 
+  const isProtectedRoute = routePermissions.some(({ route }) =>
     convertToRegex(route).test(pathname)
   );
 
@@ -46,7 +47,7 @@ export async function middleware(req) {
         { status: 401, headers: { "Content-Type": "application/json" } }
       );
     }
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   // 3. Verificar permisos de ruta

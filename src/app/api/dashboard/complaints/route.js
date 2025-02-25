@@ -7,30 +7,44 @@ export async function GET() {
     const complaints = await prisma.tbcomplaints.findMany();
     return NextResponse.json(complaints);
   } catch (error) {
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
   }
 }
 
 // POST tbcomplaints
 export async function POST(request) {
   try {
-    const { FK_passenger, FK_status, FK_transport, transportLine, vehiclePlate, violations, incidentRelation, description, image, status } = await request.json();
+    const {
+      FK_passenger,
+      FK_status,
+      transportLine,
+      vehiclePlate,
+      violations,
+      incidentRelation,
+      description,
+      image
+    } = await request.json();
     await prisma.tbcomplaints.create({
       data: {
-        FK_passenger,
-        FK_status,
-        FK_transport,
+        FK_passenger: Number(FK_passenger),
+        FK_status:Number(FK_status),
         transportLine,
         vehiclePlate,
-        violations,
+        violations :JSON.stringify(violations),
         incidentRelation,
         description,
         image,
-        status: status ?? true,
       },
     });
     return NextResponse.json({ message: "Denuncia creada exitosamente" });
   } catch (error) {
-    return NextResponse.json({ error: "Error al crear la denuncia" }, { status: 500 });
+    console.log(error)
+    return NextResponse.json(
+      { error: "Error al crear la denuncia" },
+      { status: 500 }
+    );
   }
 }

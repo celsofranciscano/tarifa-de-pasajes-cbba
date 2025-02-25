@@ -6,7 +6,7 @@ function DetailLink({ id }) {
   return (
     <Link href={`${pathname}/${id}`}>
       <svg
-        className="w-6 h-6 text-blue-500"
+        className="w-6 h-6 text-yellow-300"
         fill="none"
         stroke="currentColor"
         strokeLinecap="round"

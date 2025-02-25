@@ -1,22 +1,36 @@
-import Tablesoficila from "@/components/common/tables/TableOficial";
+import Table from "@/components/common/tables/TableOficial";
+
 function AdministratorsPage() {
   const columns = [
     "ID",
     "Nombre",
     "Apellido",
-    "Privilegio",
-    "Ingreso",
-    "Creado",
+    "Email",
+    "Ultima sesion",
     "Estado",
   ];
 
+  const rows = [
+
+    "PK_user",
+    "firstName",
+    "lastName",
+    "email",
+    "lastLogin",
+    "status",
+
+  ]
+
+
   return (
     <section className="grid gap-4">
-      <Tablesoficila
+      <Table
         url={"settings/users"}
         columns={columns}
+        rows={rows}
         name={"Usuario"}
         title={"Administradores"}
+        isCreate={true}
       />
     </section>
   );

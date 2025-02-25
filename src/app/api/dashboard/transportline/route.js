@@ -14,7 +14,7 @@ export async function GET() {
 // POST tbtransportline
 export async function POST(request) {
   try {
-    const { name, route, association, representative, contactNumber, startLocation, endLocation, description, status } = await request.json();
+    const { name, route, association, representative, contactNumber, startLocation, endLocation, description } = await request.json();
     await prisma.tbtransportline.create({
       data: {
         name,
@@ -25,7 +25,6 @@ export async function POST(request) {
         startLocation,
         endLocation,
         description,
-        status: status ?? true,
       },
     });
     return NextResponse.json({ message: "Línea de transporte creada exitosamente" });

@@ -7,7 +7,7 @@ function EditLink({ id }) {
   return (
     <Link href={`${pathname}/${id}/edit`}>
       <svg
-        class="w-6 h-6 text-blue-500"
+        class="w-6 h-6 text-yellow-300"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="24"

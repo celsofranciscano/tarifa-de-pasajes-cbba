@@ -1,5 +1,6 @@
 import prisma from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 
 // GET ALL tbpassenger
 export async function GET() {
@@ -14,7 +15,7 @@ export async function GET() {
 // POST tbpassenger
 export async function POST(request) {
   try {
-    const { FK_fare, firstName, lastName, email, password, CI, phone, profileImage, birthDate, address, gender, infracciones, status } = await request.json();
+    const { FK_fare, firstName, lastName, email, password } = await request.json();
     await prisma.tbpassenger.create({
       data: {
         FK_fare: Number(FK_fare),
@@ -22,14 +23,6 @@ export async function POST(request) {
         lastName,
         email,
         password,
-        CI,
-        phone,
-        profileImage,
-        birthDate: new Date(birthDate),
-        address,
-        gender,
-        infracciones: infracciones ? Number(infracciones) : null,
-        status: Boolean(status),
       },
     });
     return NextResponse.json({ message: "Pasajero creado exitosamente" });

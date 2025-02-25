@@ -121,6 +121,7 @@ function DashboardSideBar() {
                 { name: "Ultimos", href: "/dashboard/estados/ultimos" },
                 { name: "Reportes", href: "/dashboard/estados/reportes" },
                 { name: "Nuevo", href: "/dashboard/estados/nuevo" },
+                { name: "Lista", href: "/dashboard/estados/lista" },
               ]}
             >
               <svg
@@ -144,14 +145,15 @@ function DashboardSideBar() {
 
             <NavLink
               name={"Transportes"}
-              href={"/dashboard/income"}
+              href={"/dashboard/transportes"}
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               sublinks={[
-                { name: "Ultimos", href: "/dashboard/income/reports" },
-                { name: "Reportes", href: "/dashboard/income/consumption" },
-                { name: "Nuevo", href: "/dashboard/income/fines" },
-                { name: "Aportes", href: "/dashboard/income/extras" },
+                { name: "Ultimos", href: "/dashboard/transportes/reports" },
+                { name: "Reportes", href: "/dashboard/transportes/consumption" },
+                { name: "Nuevo", href: "/dashboard/transportes/fines" },
+                { name: "Aportes", href: "/dashboard/transportes/extras" },
+                { name: "Lista", href: "/dashboard/transportes/lista" },
               ]}
             >
               <svg
@@ -180,7 +182,7 @@ function DashboardSideBar() {
               sublinks={[
                 { name: "Ultimos", href: "/dashboard/expenses/reports" },
                 { name: "Reportes", href: "/dashboard/expenses/operational" },
-                { name: "Lista", href: "/dashboard/expenses/material" },
+                { name: "Lista", href: "/dashboard/pasajeros/lista" },
               ]}
             >
               <svg
@@ -206,9 +208,9 @@ function DashboardSideBar() {
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               sublinks={[
-                { name: "Ultimos", href: "/dashboard/expenses/reports" },
-                { name: "Reportes", href: "/dashboard/expenses/operational" },
-                { name: "Lista", href: "/dashboard/expenses/material" },
+                { name: "Ultimos", href: "/dashboard/denuncias/reports" },
+                { name: "Reportes", href: "/dashboard/denuncias/operational" },
+                { name: "Lista", href: "/dashboard/denuncias/lista" },
               ]}
             >
               <svg

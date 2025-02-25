@@ -2,27 +2,23 @@ import TableOficial from "@/components/common/tables/TableOficial";
 function PartnersPage() {
   const columns = [
     "ID",
-    "Cubo Minimo",
-    "Cubo Maximo",
-    "Precio",
-    "Precio Fijo",
+    "Tipo de usuario",
+    "Monto Bs"
   ];
   const rows = [
-    "PK_price",
-    "min_cubes",
-    "max_cubes",
-    "price",
-    "fixed_price"
+    "PK_fare",
+    "userType",
+    "amount",
   ]
 
   return (
     <section className="grid gap-4">
       <TableOficial
-        url={"dashboard/prices"}
+        url={"dashboard/fares"}
         columns={columns}
         rows={rows}
         name={"Tarifa"}
-        title={"Tarifas por metro cubico"}
+        title={"Tarifa diferenciado"}
         isCreate={true}
       />
     </section>

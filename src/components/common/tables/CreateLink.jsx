@@ -6,7 +6,7 @@ function CreateLink({name,href}) {
   return (
     <Link
       href={`${pathname}/create`}
-      className=" flex gap-2 bg-blue-500 text-white px-4 py-2 rounded-md"
+      className=" flex gap-2 bg-yellow-400 text-black px-4 py-2 rounded-md"
     >
       <span>Registrar {name}</span>
 
