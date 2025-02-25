@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite" // Define que la base de datos utilizada será SQLite
-  url      = env("DATABASE_URL") // Obtiene la URL de conexión de una variable de entorno
+  url      = env("TURSO_DATABASE_URL") // Obtiene la URL de conexión de una variable de entorno
 }
 
 model tbprivileges {

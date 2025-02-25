@@ -41,15 +41,14 @@ CREATE TABLE "tbpassenger" (
     "FK_fare" INTEGER NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
-    "email" TEXT,
-    "password" TEXT,
-    "CI" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "CI" TEXT,
     "phone" TEXT,
     "profileImage" TEXT,
-    "birthDate" DATETIME NOT NULL,
+    "birthDate" DATETIME,
     "address" TEXT,
-    "gender" TEXT NOT NULL,
-    "infracciones" INTEGER,
+    "gender" TEXT,
     "status" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME,
@@ -66,22 +65,39 @@ CREATE TABLE "tbstatuscomplaints" (
 );
 
 -- CreateTable
+CREATE TABLE "tbtransportline" (
+    "PK_transport" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "route" TEXT,
+    "association" TEXT,
+    "representative" TEXT,
+    "contactNumber" TEXT,
+    "startLocation" TEXT,
+    "endLocation" TEXT,
+    "description" TEXT,
+    "status" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME
+);
+
+-- CreateTable
 CREATE TABLE "tbcomplaints" (
     "PK_complaint" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "FK_passenger" INTEGER NOT NULL,
     "FK_status" INTEGER NOT NULL,
+    "FK_transport" INTEGER,
     "transportLine" TEXT NOT NULL,
     "vehiclePlate" TEXT NOT NULL,
+    "violations" TEXT NOT NULL,
     "incidentRelation" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "correctAmount" REAL NOT NULL,
-    "chargedAmount" REAL NOT NULL,
+    "description" TEXT,
     "image" TEXT,
     "status" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME,
     CONSTRAINT "tbcomplaints_FK_passenger_fkey" FOREIGN KEY ("FK_passenger") REFERENCES "tbpassenger" ("PK_passenger") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "tbcomplaints_FK_status_fkey" FOREIGN KEY ("FK_status") REFERENCES "tbstatuscomplaints" ("PK_status") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "tbcomplaints_FK_status_fkey" FOREIGN KEY ("FK_status") REFERENCES "tbstatuscomplaints" ("PK_status") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "tbcomplaints_FK_transport_fkey" FOREIGN KEY ("FK_transport") REFERENCES "tbtransportline" ("PK_transport") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateIndex

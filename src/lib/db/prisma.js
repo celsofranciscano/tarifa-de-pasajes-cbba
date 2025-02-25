@@ -1,17 +1,27 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaLibSQL } from "@prisma/adapter-libsql";
+import { createClient } from "@libsql/client/web";
 
 let prisma;
 
 if (process.env.NODE_ENV === "production") {
-  // En producción, crea una nueva instancia de PrismaClient
-  prisma = new PrismaClient();
+  const libsql = createClient({
+    url: process.env.TURSO_DATABASE_URL,
+    authToken: process.env.TURSO_AUTH_TOKEN,
+  });
+
+  const adapter = new PrismaLibSQL(libsql);
+  prisma = new PrismaClient({ adapter });
 } else {
-  // En desarrollo, verifica si ya hay una instancia de PrismaClient en el objeto global
   if (!global.prisma) {
-    // Si no hay una instancia, crea una nueva y asígnala al objeto global
-    global.prisma = new PrismaClient();
+    const libsql = createClient({
+      url: process.env.TURSO_DATABASE_URL,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
+
+    const adapter = new PrismaLibSQL(libsql);
+    global.prisma = new PrismaClient({ adapter });
   }
-  // Usa la instancia existente del objeto global
   prisma = global.prisma;
 }
 
