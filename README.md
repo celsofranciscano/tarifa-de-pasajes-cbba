@@ -28,6 +28,13 @@ npx prisma migrate dev --name init
 # sqlite 3
 # prisma libsql
 npm install @libsql/client @prisma/adapter-libsql
+
+# esto se ejecuta cuando haces cambios entre sqlite local y turso viceversa
+
+npx prisma generate
+
+#
+  "dev": "next dev -H 0.0.0.0", en package para habilitar en toda la red
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

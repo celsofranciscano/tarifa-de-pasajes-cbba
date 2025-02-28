@@ -1,12 +1,23 @@
 generator client {
-   provider        = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
-
 }
 
 datasource db {
   provider = "sqlite" // Define que la base de datos utilizada será SQLite
   url      = env("TURSO_DATABASE_URL") // Obtiene la URL de conexión de una variable de entorno
+}
+
+model tbadds {
+  PK_add      Int       @id @default(autoincrement()) // Clave primaria autoincrementable
+  title       String
+  image       String
+  url         String
+  button      String
+  description String
+  status      Boolean   @default(true) // Indica si el privilegio está activo o no
+  createdAt   DateTime  @default(now()) // Fecha de creación con valor por defecto de la fecha actual
+  updatedAt   DateTime? // Fecha de actualización, puede ser nula
 }
 
 model tbprivileges {
@@ -32,16 +43,16 @@ model tbusers {
   status       Boolean      @default(true) // Estado del usuario (activo o inactivo)
   createdAt    DateTime     @default(now()) // Fecha de creación
   updatedAt    DateTime? // Fecha de actualización (puede ser nula)
-  tbprivileges    tbprivileges @relation(fields: [FK_privilege], references: [PK_privilege]) // Relación con la tabla de privilegios
+  tbprivileges tbprivileges @relation(fields: [FK_privilege], references: [PK_privilege]) // Relación con la tabla de privilegios
 }
 
 model tbfares {
-  PK_fare    Int           @id @default(autoincrement()) // Clave primaria autoincrementable
-  userType   String // Tipo de usuario al que aplica la tarifa
-  amount     Float // Monto de la tarifa
-  status     Boolean       @default(true) // Estado de la tarifa (activa o inactiva)
-  createdAt  DateTime      @default(now()) // Fecha de creación
-  updatedAt  DateTime? // Fecha de actualización
+  PK_fare     Int           @id @default(autoincrement()) // Clave primaria autoincrementable
+  userType    String // Tipo de usuario al que aplica la tarifa
+  amount      Float // Monto de la tarifa
+  status      Boolean       @default(true) // Estado de la tarifa (activa o inactiva)
+  createdAt   DateTime      @default(now()) // Fecha de creación
+  updatedAt   DateTime? // Fecha de actualización
   tbpassenger tbpassenger[] // Relación con los pasajeros que tienen esta tarifa asignada
 }
 
@@ -50,9 +61,9 @@ model tbpassenger {
   FK_fare      Int // Clave foránea que referencia la tarifa del pasajero
   firstName    String // Nombre del pasajero
   lastName     String // Apellido del pasajero
-  email        String        @unique // Correo electrónico único (opcional)
+  email        String         @unique // Correo electrónico único (opcional)
   password     String // Contraseña del pasajero (opcional)
-  CI           String?         @unique // Cédula de identidad del pasajero (única)
+  CI           String?        @unique // Cédula de identidad del pasajero (única)
   phone        String? // Número de teléfono opcional
   profileImage String? // Imagen de perfil opcional
   birthDate    DateTime? // Fecha de nacimiento del pasajero
@@ -61,17 +72,17 @@ model tbpassenger {
   status       Boolean        @default(true) // Estado del pasajero (activo o inactivo)
   createdAt    DateTime       @default(now()) // Fecha de creación
   updatedAt    DateTime? // Fecha de actualización
-  tbfares         tbfares        @relation(fields: [FK_fare], references: [PK_fare]) // Relación con la tabla de tarifas
+  tbfares      tbfares        @relation(fields: [FK_fare], references: [PK_fare]) // Relación con la tabla de tarifas
   tbcomplaints tbcomplaints[] // Relación con las denuncias hechas por el pasajero
 }
 
 model tbstatuscomplaints {
-  PK_status   Int            @id @default(autoincrement()) // Clave primaria autoincrementable
-  statusName  String         @unique // Nombre del estado de la denuncia (único)
-  description String // Descripción del estado de la denuncia
-  createdAt   DateTime       @default(now()) // Fecha de creación
-  updatedAt   DateTime? // Fecha de actualización
-  tbcomplaints  tbcomplaints[] // Relación con las denuncias que tienen este estado
+  PK_status    Int            @id @default(autoincrement()) // Clave primaria autoincrementable
+  statusName   String         @unique // Nombre del estado de la denuncia (único)
+  description  String // Descripción del estado de la denuncia
+  createdAt    DateTime       @default(now()) // Fecha de creación
+  updatedAt    DateTime? // Fecha de actualización
+  tbcomplaints tbcomplaints[] // Relación con las denuncias que tienen este estado
 }
 
 model tbtransportline {
@@ -107,5 +118,5 @@ model tbcomplaints {
   updatedAt          DateTime? // Fecha de actualización
   passenger          tbpassenger        @relation(fields: [FK_passenger], references: [PK_passenger]) // Relación con el pasajero que hizo la denuncia
   tbstatuscomplaints tbstatuscomplaints @relation(fields: [FK_status], references: [PK_status]) // Relación con el estado de la denuncia
-  tbtransportline    tbtransportline?    @relation(fields: [FK_transport], references: [PK_transport]) // Relación con la línea de transporte
+  tbtransportline    tbtransportline?   @relation(fields: [FK_transport], references: [PK_transport]) // Relación con la línea de transporte
 }
