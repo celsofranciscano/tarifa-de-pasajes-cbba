@@ -34,6 +34,7 @@ let decoded
       violations,
       incidentRelation,
       description,
+      image
     } = await request.json();
 
     await prisma.tbcomplaints.create({
@@ -45,6 +46,7 @@ let decoded
         violations: JSON.stringify(violations),
         incidentRelation,
         description,
+        image
       },
     });
 
