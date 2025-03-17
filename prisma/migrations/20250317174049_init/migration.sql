@@ -59,7 +59,7 @@ CREATE TABLE "tbpassenger" (
     "CI" TEXT,
     "phone" TEXT,
     "profileImage" TEXT,
-    "birthDate" DATETIME,
+    "birthDate" TEXT,
     "address" TEXT,
     "gender" TEXT,
     "status" BOOLEAN NOT NULL DEFAULT true,
@@ -111,6 +111,19 @@ CREATE TABLE "tbcomplaints" (
     CONSTRAINT "tbcomplaints_FK_passenger_fkey" FOREIGN KEY ("FK_passenger") REFERENCES "tbpassenger" ("PK_passenger") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "tbcomplaints_FK_status_fkey" FOREIGN KEY ("FK_status") REFERENCES "tbstatuscomplaints" ("PK_status") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "tbcomplaints_FK_transport_fkey" FOREIGN KEY ("FK_transport") REFERENCES "tbtransportline" ("PK_transport") ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "tbnotifications" (
+    "PK_notification" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "FK_passenger" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "actionUrl" TEXT,
+    "isRead" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME,
+    CONSTRAINT "tbnotifications_FK_passenger_fkey" FOREIGN KEY ("FK_passenger") REFERENCES "tbpassenger" ("PK_passenger") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex

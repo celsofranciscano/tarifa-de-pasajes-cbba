@@ -3,11 +3,9 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 export async function GET(request) {
- 
-
   // Verifica el token en la cabecera
   const authHeader = request.headers.get("authorization");
-  console.log("aquiii  ahora celso")
+  console.log("aquiii  ahora celso");
   if (!authHeader) {
     return NextResponse.json(
       { error: "Token no proporcionado" },
@@ -20,15 +18,19 @@ export async function GET(request) {
   try {
     // Verifica el token
     const decoded = jwt.verify(token, process.env.AUTH_SECRET);
-
-   
   } catch (error) {
-
     return NextResponse.json({ error: "Token inválido" }, { status: 403 });
   }
 
   try {
     const complaints = await prisma.tbcomplaints.findMany({
+      where: {
+        tbstatuscomplaints: {
+          statusName: {
+            not: "Pendiente", // Filtra para excluir "Pendiente"
+          },
+        },
+      },
       include: {
         tbstatuscomplaints: {
           select: {
@@ -50,7 +52,6 @@ export async function GET(request) {
 
     return NextResponse.json(complaints);
   } catch (error) {
- 
     return NextResponse.json(
       { error: "Error interno del servidor" },
       { status: 500 }
