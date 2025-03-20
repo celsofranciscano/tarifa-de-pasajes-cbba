@@ -24,13 +24,12 @@ export async function GET(request) {
 
   try {
     const complaints = await prisma.tbcomplaints.findMany({
-      where: {
-        tbstatuscomplaints: {
-          statusName: {
-            not: "Pendiente", // Filtra para excluir "Pendiente"
-          },
-        },
-      },
+  where: {
+  tbstatuscomplaints: {
+    isNot: { statusName: "Pendiente" },
+  },
+},
+
       include: {
         tbstatuscomplaints: {
           select: {
